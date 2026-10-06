@@ -132,8 +132,8 @@ class Interface(unittest.TestCase):
         keys=[w.key for group in [at.number_input, at.selectbox, at.button] for w in group]
         self.assertNotIn(None,keys)
         self.assertEqual(len(keys),len(set(keys)))
-        self.assertEqual(len(at.tabs),14)
-        for button in [b for b in at.button if not b.key.startswith("adv_")]:
+        self.assertEqual(len(at.tabs),15)
+        for button in [b for b in at.button if not b.key.startswith(("adv_", "p2a_", "p2b_", "p2c_", "p2d_", "p2e_", "p2f_", "p2g_", "p2h_"))]:
             at.button(key=button.key).click().run()
             self.assertFalse(at.exception,button.key)
         for tank in ['Horizontal Cylindrical Tank','Spherical Tank','Rectangular Tank','Square Tank','Conical Tank']:

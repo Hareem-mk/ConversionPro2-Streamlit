@@ -1,0 +1,54 @@
+[
+  {
+    "id": "epa_cast_iron",
+    "material": "Cast Iron",
+    "condition": "New pipe",
+    "original_value": 0.85,
+    "original_units": "10⁻³ ft",
+    "epsilon_m": 0.00025908,
+    "source": "US EPA, EPANET Users Manual",
+    "edition": "Release 2.2 (2020), EPA/600/R-20/133",
+    "location": "Section 3.1, Pipes; Table 3.2, Roughness Coefficients for New Pipe; printed page 18",
+    "url": "https://usepa.github.io/EPANET2.2/3_network_model.html",
+    "notes": "Generic new-pipe category; no product, grade, coating or aged-condition guarantee. Use the Darcy-Weisbach epsilon column only. Tabulated roughness values are representative, not universally exact. Effective roughness can change with age, corrosion, scaling/deposits, manufacturing method, internal coating/lining, pipe condition and service history. Confirm the engineering basis for your actual pipe."
+  },
+  {
+    "id": "epa_galvanized_iron",
+    "material": "Galvanized Iron",
+    "condition": "New pipe",
+    "original_value": 0.5,
+    "original_units": "10⁻³ ft",
+    "epsilon_m": 0.0001524,
+    "source": "US EPA, EPANET Users Manual",
+    "edition": "Release 2.2 (2020), EPA/600/R-20/133",
+    "location": "Section 3.1, Pipes; Table 3.2, Roughness Coefficients for New Pipe; printed page 18",
+    "url": "https://usepa.github.io/EPANET2.2/3_network_model.html",
+    "notes": "Generic new-pipe category; no product, grade, coating or aged-condition guarantee. Use the Darcy-Weisbach epsilon column only. Tabulated roughness values are representative, not universally exact. Effective roughness can change with age, corrosion, scaling/deposits, manufacturing method, internal coating/lining, pipe condition and service history. Confirm the engineering basis for your actual pipe."
+  },
+  {
+    "id": "epa_plastic",
+    "material": "Plastic",
+    "condition": "New pipe",
+    "original_value": 0.005,
+    "original_units": "10⁻³ ft",
+    "epsilon_m": 1.524e-06,
+    "source": "US EPA, EPANET Users Manual",
+    "edition": "Release 2.2 (2020), EPA/600/R-20/133",
+    "location": "Section 3.1, Pipes; Table 3.2, Roughness Coefficients for New Pipe; printed page 18",
+    "url": "https://usepa.github.io/EPANET2.2/3_network_model.html",
+    "notes": "Generic new-pipe category; no product, grade, coating or aged-condition guarantee. Use the Darcy-Weisbach epsilon column only. Tabulated roughness values are representative, not universally exact. Effective roughness can change with age, corrosion, scaling/deposits, manufacturing method, internal coating/lining, pipe condition and service history. Confirm the engineering basis for your actual pipe."
+  },
+  {
+    "id": "epa_steel",
+    "material": "Steel",
+    "condition": "New pipe",
+    "original_value": 0.15,
+    "original_units": "10⁻³ ft",
+    "epsilon_m": 4.572e-05,
+    "source": "US EPA, EPANET Users Manual",
+    "edition": "Release 2.2 (2020), EPA/600/R-20/133",
+    "location": "Section 3.1, Pipes; Table 3.2, Roughness Coefficients for New Pipe; printed page 18",
+    "url": "https://usepa.github.io/EPANET2.2/3_network_model.html",
+    "notes": "Generic new-pipe category; no product, grade, coating or aged-condition guarantee. Use the Darcy-Weisbach epsilon column only. Tabulated roughness values are representative, not universally exact. Effective roughness can change with age, corrosion, scaling/deposits, manufacturing method, internal coating/lining, pipe condition and service history. Confirm the engineering basis for your actual pipe."
+  }
+]

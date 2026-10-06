@@ -486,7 +486,7 @@ def main():
 
     labels = ["Temperature", "Pressure", "Volume", "Mass", "Energy", "Power",
               "Flow Rate", "Mass Flow", "Density", "SG / API / ppm", "Viscosity",
-              "Tank Calculator", "Pipeline Calculator", "Advanced Engineering"]
+              "Tank Calculator", "Pipeline Calculator", "Advanced Engineering", "Piping & Pump System Hydraulics"]
     tabs = st.tabs(labels)
     tables = [(TEMP, TEMP[0], TEMP[1]), (PRESSURE, "Pascal (Pa)", "Bar"),
               (VOLUME, "Liter (L)", "Gallon (US)"), (MASS, "Kilogram (kg)", "Pound (lb)"),
@@ -553,6 +553,23 @@ def main():
     with tabs[13]:
         from advanced_engineering import render
         render()
+    with tabs[14]:
+        from piping_hydraulics.ui import render_pipe_sizing
+        render_pipe_sizing(FLOW)
+        from piping_hydraulics.capacity_ui import render_pipe_capacity
+        render_pipe_capacity(FLOW)
+        from piping_hydraulics.roughness_ui import render_roughness
+        render_roughness()
+        from piping_hydraulics.fittings_ui import render_fittings
+        render_fittings()
+        from piping_hydraulics.equivalent_length import render_equivalent_length
+        render_equivalent_length()
+        from piping_hydraulics.integrated_ui import render_integrated
+        render_integrated(FLOW)
+        from piping_hydraulics.pump_head_ui import render_pump_head
+        render_pump_head(PRESSURE)
+        from piping_hydraulics.npsha_ui import render_npsha
+        render_npsha(PRESSURE)
     st.caption("Preliminary engineering calculations. Verify fluid properties, reference conditions and project design criteria before final design use.")
 
 
