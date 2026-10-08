@@ -87,10 +87,8 @@ def render_pump_head(pressure_factors):
         loss_help='Enter only losses that are not already represented by the selected Point 1 and Point 2 pressure measurements. Avoid double-counting.'
         st.caption('Suction/discharge totals include their major and minor losses. Enter explicit zero when absent. '
                    'Equipment loss must not already be included in these totals or reference pressures. No automatic Stage 2F transfer.')
-        st.caption(loss_help)
-        losses_confirmed=st.checkbox('I confirm that the hydraulic losses entered below are NOT already included in the Point 1 and Point 2 pressure values.',
-            key=prefix+'losses_not_in_pressures_confirmed',
-            help='This prevents double-counting. If a piping, valve, fitting, or equipment loss is already reflected in the selected Point 1 and Point 2 pressures, do not enter that same loss again separately.')
+        st.info('Important — Avoid double-counting losses: Enter suction-side, discharge-side, and equipment losses only when those losses are NOT already represented in the Point 1 and Point 2 pressure values.')
+        st.caption('If the selected reference pressures already include the pressure drop through a pipe, valve, fitting, or equipment item, do not enter that same loss again separately.')
         eq_unit=st.selectbox('Equipment Pressure Loss Unit',list(pressure_factors),index=None,key=prefix+'equipment_unit')
         eq_suffix=eq_unit if eq_unit is not None else 'select Equipment Pressure Loss Unit above'
         loss_labels={'suction_loss':'Suction-Side Hydraulic Loss (m)',
@@ -100,11 +98,8 @@ def render_pump_head(pressure_factors):
             loss_args[key]=st.number_input(label,value=None,min_value=0.0,format='%.12g',key=prefix+key,help=loss_help)
     if st.button('Calculate pump head',key=prefix+'calculate'):
         try:
-            if not confirmed or (system and not losses_confirmed):
-                if not confirmed:
-                    st.warning('Please confirm that Point 1 and Point 2 use consistent pressure and elevation references.')
-                if system and not losses_confirmed:
-                    st.warning('Please confirm that the entered hydraulic losses are NOT already included in the Point 1 and Point 2 pressure values. Remove any duplicated loss before confirming.')
+            if not confirmed:
+                st.warning('Please confirm that Point 1 and Point 2 use consistent pressure and elevation references.')
                 return
             if basis is None:raise ValueError('Select Pressure Reference: Gauge Pressure or Absolute Pressure.')
             if unit is None:raise ValueError('Select Pressure Unit for both pressure entries.')
