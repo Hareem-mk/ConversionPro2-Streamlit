@@ -120,21 +120,25 @@ class PumpHeadTests(unittest.TestCase):
         at.selectbox(key='p2g_mode').select('SYSTEM REQUIRED PUMP HEAD').run()
         prefix='p2g_system_'
         at.button(key=prefix+'calculate').click().run()
-        self.assertTrue(at.error)
+        self.assertEqual(sum(w.value.startswith('Please confirm') for w in at.warning),2)
+        self.assertFalse(at.error)
         at.selectbox(key=prefix+'basis').select('Gauge')
         at.selectbox(key=prefix+'unit').select('Kilopascal (kPa)')
         at.selectbox(key=prefix+'equipment_unit').select('Kilopascal (kPa)')
         at.text_input(key=prefix+'datum').set_value('Site datum')
         at.checkbox(key=prefix+'reference').check()
+        at.checkbox(key=prefix+'losses_not_in_pressures_confirmed').check()
         for key,v in dict(density=1000,p1=0,p2=100,z1=0,z2=10,v1=1,v2=2,
                           suction_loss=2,discharge_loss=3,equipment_dp=10).items():
             at.number_input(key=prefix+key).set_value(v)
         at.button(key=prefix+'calculate').click().run()
         self.assertFalse(at.error)
         self.assertTrue(any('TOTAL PUMP HEAD:' in t.value for t in at.text))
-        at.checkbox(key=prefix+'duplicate').check()
+        at.checkbox(key=prefix+'losses_not_in_pressures_confirmed').uncheck()
         at.button(key=prefix+'calculate').click().run()
-        self.assertTrue(at.error)
+        self.assertFalse(at.error)
+        self.assertTrue(any('NOT already included' in w.value for w in at.warning))
+        self.assertFalse(any('TOTAL PUMP HEAD:' in t.value for t in at.text))
         at.selectbox(key='p2g_mode').select('PUMP-FLANGE DIFFERENTIAL HEAD').run()
         self.assertFalse(any('suction_loss' in w.key for w in at.number_input if w.key.startswith('p2g_')))
         self.assertFalse(any('TOTAL PUMP HEAD:' in t.value for t in at.text))
@@ -153,3 +157,4 @@ class PumpHeadTests(unittest.TestCase):
         keys=[w.key for group in [at.number_input,at.selectbox,at.button,at.checkbox,at.text_input] for w in group]
         self.assertEqual(len(keys),len(set(keys)))
         self.assertFalse(at.exception)
+
