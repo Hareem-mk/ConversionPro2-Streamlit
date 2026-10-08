@@ -457,8 +457,17 @@ These velocity limits are generic screening values, not final design criteria.""
 
 def main():
     import streamlit as st
-    st.set_page_config(page_title="Conversion Pro", layout="wide")
-    st.title("⚙️ Conversion Pro")
+    st.set_page_config(page_title="ConversionPro Engineering Calculator", layout="wide")
+    st.markdown("""
+    <style>
+    .conversionpro-header {display:flex; align-items:flex-start; gap:1rem; width:100%; margin-bottom:1rem;}
+    .conversionpro-header h1 {flex:1; min-width:0; margin:0; padding:0; font-size:clamp(1.6rem,3.2vw,2.8rem); overflow-wrap:break-word;}
+    .conversionpro-header .mku {flex:0 0 auto; margin-left:auto; text-align:right; font-size:0.85rem; font-weight:600; letter-spacing:0.06em; padding-top:0.35rem;}
+    </style>
+    <div class="conversionpro-header">
+      <h1>ConversionPro Engineering Calculator</h1><span class="mku">MKU</span>
+    </div>
+    """, unsafe_allow_html=True)
     st.caption("Engineering unit conversions, tank geometry and pipeline velocity")
 
     def number(label, key, value=0.0, nonnegative=False):
@@ -575,3 +584,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
