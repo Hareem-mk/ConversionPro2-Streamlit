@@ -71,7 +71,9 @@ def render_pump_head(pressure_factors):
              'plant grade, sea level, or the project datum. Only the elevation difference between Point 1 and Point 2 affects pump head.')
     datum=st.text_input('Reference level — describe it',key=prefix+'datum',
                        help='For example: plant grade, sea level, or the project datum. Describe the level used for both elevations.')
-    confirmed=st.checkbox('Both points use this reference level and consistent pressure references; if gauge, the same atmospheric reference.',key=prefix+'reference')
+    confirmed=st.checkbox('I confirm that Point 1 and Point 2 use consistent pressure and elevation references.',
+        key=prefix+'reference',
+        help='Both elevations must use the same datum/reference level. Both pressures must use the same pressure reference. If gauge pressure is selected, use the same atmospheric reference for both points.')
     for key in ['z1','z2']:
         numeric(key,f'{names[key]} (m)',help_text='Signed elevation relative to the same reference level; positive upward.')
     st.caption('STEP 4 — VELOCITY')
@@ -86,6 +88,9 @@ def render_pump_head(pressure_factors):
         st.caption('Suction/discharge totals include their major and minor losses. Enter explicit zero when absent. '
                    'Equipment loss must not already be included in these totals or reference pressures. No automatic Stage 2F transfer.')
         st.caption(loss_help)
+        losses_confirmed=st.checkbox('I confirm that the hydraulic losses entered below are NOT already included in the Point 1 and Point 2 pressure values.',
+            key=prefix+'losses_not_in_pressures_confirmed',
+            help='This prevents double-counting. If a pressure measurement already includes a piping, valve, fitting, or equipment pressure loss between the selected reference points, do not enter that same loss again separately.')
         eq_unit=st.selectbox('Equipment Pressure Loss Unit',list(pressure_factors),index=None,key=prefix+'equipment_unit')
         eq_suffix=eq_unit if eq_unit is not None else 'select Equipment Pressure Loss Unit above'
         loss_labels={'suction_loss':'Suction-Side Hydraulic Loss (m)',
@@ -93,9 +98,14 @@ def render_pump_head(pressure_factors):
                      'equipment_dp':f'Equipment Pressure Loss ({eq_suffix})'}
         for key,label in loss_labels.items():
             loss_args[key]=st.number_input(label,value=None,min_value=0.0,format='%.12g',key=prefix+key,help=loss_help)
-        already=st.checkbox('Entered losses are already represented in the supplied reference pressures',key=prefix+'duplicate')
     if st.button('Calculate pump head',key=prefix+'calculate'):
         try:
+            if not confirmed or (system and not losses_confirmed):
+                if not confirmed:
+                    st.warning('Please confirm that Point 1 and Point 2 use consistent pressure and elevation references.')
+                if system and not losses_confirmed:
+                    st.warning('Please confirm that the entered hydraulic losses are NOT already included in the Point 1 and Point 2 pressure values. Remove any duplicated loss before confirming.')
+                return
             if basis is None:raise ValueError('Select Pressure Reference: Gauge Pressure or Absolute Pressure.')
             if unit is None:raise ValueError('Select Pressure Unit for both pressure entries.')
             missing=[label for key,label in labels.items() if args[key] is None]
@@ -108,7 +118,7 @@ def render_pump_head(pressure_factors):
             args.update(basis1=basis,basis2=basis,datum=datum,reference_confirmed=confirmed)
             if system:
                 loss_args['equipment_dp_pa']=pressure_to_pa(loss_args.pop('equipment_dp'),eq_unit,pressure_factors)
-                r=system_required_head(**args,**loss_args,losses_already_in_reference_pressures=already)
+                r=system_required_head(**args,**loss_args,losses_already_in_reference_pressures=False)
             else:r=flange_differential_head(**args)
             st.subheader('Total Pump Head' if system else 'Pump-Flange Differential Head')
             st.text(('TOTAL PUMP HEAD' if system else 'TOTAL PUMP DIFFERENTIAL HEAD')+f': {r.total_head_m:.12g} m')
