@@ -90,7 +90,7 @@ def render_pump_head(pressure_factors):
         st.caption(loss_help)
         losses_confirmed=st.checkbox('I confirm that the hydraulic losses entered below are NOT already included in the Point 1 and Point 2 pressure values.',
             key=prefix+'losses_not_in_pressures_confirmed',
-            help='This prevents double-counting. If a pressure measurement already includes a piping, valve, fitting, or equipment pressure loss between the selected reference points, do not enter that same loss again separately.')
+            help='This prevents double-counting. If a piping, valve, fitting, or equipment loss is already reflected in the selected Point 1 and Point 2 pressures, do not enter that same loss again separately.')
         eq_unit=st.selectbox('Equipment Pressure Loss Unit',list(pressure_factors),index=None,key=prefix+'equipment_unit')
         eq_suffix=eq_unit if eq_unit is not None else 'select Equipment Pressure Loss Unit above'
         loss_labels={'suction_loss':'Suction-Side Hydraulic Loss (m)',
