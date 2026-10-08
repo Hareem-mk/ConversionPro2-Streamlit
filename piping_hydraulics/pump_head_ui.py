@@ -16,10 +16,10 @@ def render_pump_head(pressure_factors):
     system=mode=='SYSTEM REQUIRED PUMP HEAD'
     prefix='p2g_system_' if system else 'p2g_flange_'
     if system:
-        st.write('Point 1 = source/upstream system reference point. '
-                 'Point 2 = destination/downstream system reference point. '
-                 'Pump head is calculated from Point 1 to Point 2. '
-                 'Do not use already adjusted flange pressures while also re-adding external piping losses.')
+        st.write('Define two reference points in the pumping system. '
+                 'Point 1 is the source/suction-side reference and Point 2 is the '
+                 'destination/discharge-side reference. The calculator determines '
+                 'the pump head required to move fluid from Point 1 to Point 2.')
         st.latex(r'H_{required}=\frac{P_2-P_1}{\rho g}+(z_2-z_1)+\frac{V_2^2-V_1^2}{2g}+h_s+h_d+\frac{\Delta P_{equipment}}{\rho g}')
     else:
         st.write('Point 1: defined suction flange/reference point. Point 2: defined discharge flange/reference point. '
@@ -29,20 +29,6 @@ def render_pump_head(pressure_factors):
     st.caption('Flow is positive from point 1 to point 2. Elevation is positive upward. '
                'Higher destination pressure/elevation contributes positively. Loss magnitudes are nonnegative and added. '
                'Negative calculated head is retained. Gauge pressures may be signed; absolute pressures cannot be negative.')
-    st.write('Select Pressure Basis and Pressure Unit, then enter a numeric pressure at each reference point. '
-             'Enter explicit zero where applicable; blank inputs are not treated as zero.')
-    basis=st.selectbox('Pressure Basis',['Gauge','Absolute'],index=None,key=prefix+'basis',
-        help='Use the same pressure basis for Point 1 and Point 2. Gauge pressures are valid for this differential-head calculation when both use the same atmospheric reference.')
-    unit=st.selectbox('Pressure Unit',list(pressure_factors),index=None,key=prefix+'unit',
-        help='Select the unit used for both pressure entries below.')
-    st.caption('Use the same pressure basis for Point 1 and Point 2. Gauge pressures are valid for this '
-               'differential-head calculation when both use the same atmospheric reference.')
-    pressure_suffix=unit if unit is not None else 'select Pressure Unit above'
-    st.write('**Common Elevation Datum**')
-    st.caption('Enter both elevations relative to the same reference datum. Only the difference z2 − z1 affects the calculated pump head.')
-    datum=st.text_input('Common Elevation Datum — describe the reference',key=prefix+'datum',
-                       help='For example: site survey datum or pump centreline. This describes the reference, not a numeric elevation.')
-    confirmed=st.checkbox('Both points use this datum and consistent pressure references; if gauge, the same atmospheric reference.',key=prefix+'reference')
     if system:
         names={'p1':'Point 1 — Source Pressure','p2':'Point 2 — Destination Pressure',
                'z1':'Point 1 — Source Elevation','z2':'Point 2 — Destination Elevation',
@@ -55,17 +41,48 @@ def render_pump_head(pressure_factors):
         pressure_help='Pressure measured at the defined pump flange/reference point. Negative gauge pressure is allowed.'
         st.caption('External suction/discharge piping losses are not added in this mode.')
     args={}
-    labels={'density':'Density (kg/m³)'}
-    for key in ['p1','p2','z1','z2','v1','v2']:
-        suffix=pressure_suffix if key.startswith('p') else 'm' if key.startswith('z') else 'm/s'
-        labels[key]=f'{names[key]} ({suffix})'
-    for key,label in labels.items():
-        nonneg=key in ('density','v1','v2')
-        help_text=pressure_help if key.startswith('p') else ('Signed elevation relative to the common datum; positive upward.' if key.startswith('z') else None)
-        args[key]=st.number_input(label,value=None,min_value=0.0 if nonneg else None,format='%.12g',key=prefix+key,help=help_text)
+    labels={}
+    def numeric(key,label,nonneg=False,help_text=None):
+        labels[key]=label
+        args[key]=st.number_input(label,value=None,min_value=0.0 if nonneg else None,
+                                  format='%.12g',key=prefix+key,help=help_text)
+    st.caption('STEP 1 — FLUID')
+    st.markdown('#### Fluid Properties')
+    numeric('density','Density (kg/m³)',True)
+    st.caption('STEP 2 — PRESSURE')
+    st.markdown('#### Pressure')
+    st.write('Select a pressure reference and unit, then enter both numeric pressures. '
+             'Enter explicit zero where applicable; blank inputs are not treated as zero.')
+    basis=st.selectbox('Pressure Reference',['Gauge','Absolute'],index=None,key=prefix+'basis',
+        format_func=lambda value: value+' Pressure',
+        help='Use the same pressure reference for both Point 1 and Point 2. Gauge pressure is commonly used for plant hydraulic calculations. Absolute pressure may also be used when both points use the same basis.')
+    st.caption('Use the same pressure reference for both Point 1 and Point 2. '
+               'Gauge pressure is commonly used for plant hydraulic calculations. '
+               'Absolute pressure may also be used when both points use the same basis. '
+               'Gauge pressures must use the same atmospheric reference.')
+    unit=st.selectbox('Pressure Unit',list(pressure_factors),index=None,key=prefix+'unit',
+        help='Select the unit used for both pressure entries below.')
+    pressure_suffix=unit if unit is not None else 'select Pressure Unit above'
+    for key in ['p1','p2']:
+        numeric(key,f'{names[key]} ({pressure_suffix})',help_text=pressure_help)
+    st.caption('STEP 3 — ELEVATION')
+    st.markdown('#### Elevation')
+    st.write('**Elevation Reference:** Enter both elevations relative to the same reference level, such as '
+             'plant grade, sea level, or the project datum. Only the elevation difference between Point 1 and Point 2 affects pump head.')
+    datum=st.text_input('Reference level — describe it',key=prefix+'datum',
+                       help='For example: plant grade, sea level, or the project datum. Describe the level used for both elevations.')
+    confirmed=st.checkbox('Both points use this reference level and consistent pressure references; if gauge, the same atmospheric reference.',key=prefix+'reference')
+    for key in ['z1','z2']:
+        numeric(key,f'{names[key]} (m)',help_text='Signed elevation relative to the same reference level; positive upward.')
+    st.caption('STEP 4 — VELOCITY')
+    st.markdown('#### Velocity')
+    for key in ['v1','v2']:
+        numeric(key,f'{names[key]} (m/s)',True)
     loss_args={}
     if system:
-        loss_help='Do not enter losses already represented between the selected pressure reference points again. Include each loss once.'
+        st.caption('STEP 5 — SYSTEM LOSSES')
+        st.markdown('#### System Hydraulic Losses')
+        loss_help='Enter only losses that are not already represented by the selected Point 1 and Point 2 pressure measurements. Avoid double-counting.'
         st.caption('Suction/discharge totals include their major and minor losses. Enter explicit zero when absent. '
                    'Equipment loss must not already be included in these totals or reference pressures. No automatic Stage 2F transfer.')
         st.caption(loss_help)
@@ -79,7 +96,7 @@ def render_pump_head(pressure_factors):
         already=st.checkbox('Entered losses are already represented in the supplied reference pressures',key=prefix+'duplicate')
     if st.button('Calculate pump head',key=prefix+'calculate'):
         try:
-            if basis is None:raise ValueError('Select Pressure Basis: Gauge or Absolute.')
+            if basis is None:raise ValueError('Select Pressure Reference: Gauge Pressure or Absolute Pressure.')
             if unit is None:raise ValueError('Select Pressure Unit for both pressure entries.')
             missing=[label for key,label in labels.items() if args[key] is None]
             if system:
@@ -93,13 +110,15 @@ def render_pump_head(pressure_factors):
                 loss_args['equipment_dp_pa']=pressure_to_pa(loss_args.pop('equipment_dp'),eq_unit,pressure_factors)
                 r=system_required_head(**args,**loss_args,losses_already_in_reference_pressures=already)
             else:r=flange_differential_head(**args)
-            st.caption(f'Mode: {r.mode} | Pressure basis: {r.pressure_basis} | Datum: {r.datum} | α = 1')
+            st.subheader('Total Pump Head' if system else 'Pump-Flange Differential Head')
+            st.text(('TOTAL PUMP HEAD' if system else 'TOTAL PUMP DIFFERENTIAL HEAD')+f': {r.total_head_m:.12g} m')
+            st.caption(f'Mode: {r.mode} | Pressure reference: {r.pressure_basis} Pressure | Reference level: {r.datum} | α = 1')
+            st.markdown('**Component breakdown**')
             st.text(f'Pressure-head contribution: {r.pressure_head_m:.12g} m\n'
                     f'Static/elevation-head contribution: {r.elevation_head_m:.12g} m\n'
                     f'Velocity-head contribution: {r.velocity_head_m:.12g} m')
             if system:
                 st.text(f'Suction loss: {r.suction_loss_m:.12g} m\nDischarge loss: {r.discharge_loss_m:.12g} m\nEquipment-loss head: {r.equipment_head_m:.12g} m')
-            st.text(('TOTAL PUMP HEAD' if system else 'TOTAL PUMP DIFFERENTIAL HEAD')+f': {r.total_head_m:.12g} m')
             if r.total_head_m<0:
                 st.warning('Negative head retained: the specified boundary/reference conditions provide a net head surplus '
                            'relative to the included losses. This is not positive pump head demand or a pump selection; '
