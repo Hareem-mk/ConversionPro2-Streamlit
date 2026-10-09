@@ -68,10 +68,8 @@ class EquivalentTests(unittest.TestCase):
         at.button(key='p2e_calculate').click().run()
         self.assertFalse(at.error)
         self.assertTrue(any('Equivalent length Le: 10 m' in x.value for x in at.text))
-        at.checkbox(key='p2e_duplicate').check()
-        at.button(key='p2e_calculate').click().run()
-        self.assertTrue(any('Double counting' in e.value for e in at.error))
-        at.checkbox(key='p2e_duplicate').uncheck()
+        self.assertEqual([w.key for w in at.checkbox if w.key.startswith('p2e_')],['p2e_confirm'])
+        self.assertTrue(any('Important — Avoid double-counting:' in w.value for w in at.info))
         at.selectbox(key='p2e_basis').select('Individual fitting K')
         at.number_input(key='p2e_k').set_value(0)
         at.button(key='p2e_calculate').click().run()
@@ -83,3 +81,4 @@ class EquivalentTests(unittest.TestCase):
         keys=[w.key for g in [at.number_input,at.selectbox,at.button,at.checkbox,at.text_input] for w in g]
         self.assertEqual(len(keys),len(set(keys)))
         self.assertFalse(at.exception)
+
