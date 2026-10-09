@@ -16,24 +16,22 @@ def render_pump_head(pressure_factors):
     system=mode=='SYSTEM REQUIRED PUMP HEAD'
     prefix='p2g_system_' if system else 'p2g_flange_'
     if system:
-        st.write('Define two reference points in the pumping system. '
-                 'Point 1 is the source/suction-side reference and Point 2 is the '
-                 'destination/discharge-side reference. The calculator determines '
-                 'the pump head required to move fluid from Point 1 to Point 2.')
+        st.write('Choose one upstream reference point and one downstream reference point. Pressure, elevation, and velocity must all correspond to those same two physical locations.')
+        st.caption('Examples of valid reference points include tank liquid surfaces, pipeline boundaries, or other defined hydraulic locations. Use the same physical upstream and downstream locations consistently for pressure, elevation, and velocity.')
         st.latex(r'H_{required}=\frac{P_2-P_1}{\rho g}+(z_2-z_1)+\frac{V_2^2-V_1^2}{2g}+h_s+h_d+\frac{\Delta P_{equipment}}{\rho g}')
     else:
         st.write('Point 1: defined suction flange/reference point. Point 2: defined discharge flange/reference point. '
                  'Measured pressures and velocities define the pump differential head directly. External suction/discharge '
                  'piping losses are not added in this mode.')
         st.latex(r'H_{pump}=\frac{P_d-P_s}{\rho g}+(z_d-z_s)+\frac{V_d^2-V_s^2}{2g}')
-    st.caption('Flow is positive from point 1 to point 2. Elevation is positive upward. '
-               'Higher destination pressure/elevation contributes positively. Loss magnitudes are nonnegative and added. '
+    st.caption('Flow is positive from point 1 to point 2. Elevation is positive upward. '+
+               ('Higher downstream pressure/elevation contributes positively. Loss magnitudes are nonnegative and added. ' if system else 'Higher destination pressure/elevation contributes positively. Loss magnitudes are nonnegative and added. ')+
                'Negative calculated head is retained. Gauge pressures may be signed; absolute pressures cannot be negative.')
     if system:
-        names={'p1':'Point 1 — Source Pressure','p2':'Point 2 — Destination Pressure',
-               'z1':'Point 1 — Source Elevation','z2':'Point 2 — Destination Elevation',
-               'v1':'Point 1 — Source Velocity','v2':'Point 2 — Destination Velocity'}
-        pressure_help='Pressure at the defined source/destination system reference point. Negative gauge pressure is allowed.'
+        names={'p1':'Upstream Reference Pressure','p2':'Downstream Reference Pressure',
+               'z1':'Upstream Reference Elevation','z2':'Downstream Reference Elevation',
+               'v1':'Upstream Reference Velocity','v2':'Downstream Reference Velocity'}
+        pressure_help='Pressure at the defined upstream/downstream system reference point. Negative gauge pressure is allowed.'
     else:
         names={'p1':'Pump Suction-Flange Pressure','p2':'Pump Discharge-Flange Pressure',
                'z1':'Pump Suction-Flange Elevation','z2':'Pump Discharge-Flange Elevation',
