@@ -579,9 +579,13 @@ def main():
         render_pump_head(PRESSURE)
         from piping_hydraulics.npsha_ui import render_npsha
         render_npsha(PRESSURE)
+    st.divider()
+    st.header('Phase 3 — Pump Performance')
+    with st.expander('3A — Hydraulic Power'):
+        from pump_performance.hydraulic_power_ui import render_hydraulic_power
+        render_hydraulic_power(FLOW, DENSITY)
     st.caption("Preliminary engineering calculations. Verify fluid properties, reference conditions and project design criteria before final design use.")
 
 
 if __name__ == "__main__":
     main()
-
