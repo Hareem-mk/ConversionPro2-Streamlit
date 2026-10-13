@@ -587,6 +587,9 @@ def main():
     with st.expander('3B — Pump Shaft / Brake Power'):
         from pump_performance.shaft_power_ui import render_shaft_power
         render_shaft_power(FLOW, DENSITY)
+    with st.expander('3C — Motor Input Power'):
+        from pump_performance.motor_power_ui import render_motor_power
+        render_motor_power(FLOW, DENSITY)
     st.caption("Preliminary engineering calculations. Verify fluid properties, reference conditions and project design criteria before final design use.")
 
 
