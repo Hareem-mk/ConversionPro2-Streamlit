@@ -590,6 +590,9 @@ def main():
     with st.expander('3C — Motor Input Power'):
         from pump_performance.motor_power_ui import render_motor_power
         render_motor_power(FLOW, DENSITY)
+    with st.expander('3D — Pump Efficiency'):
+        from pump_performance.pump_efficiency_ui import render_pump_efficiency
+        render_pump_efficiency(FLOW, DENSITY)
     st.caption("Preliminary engineering calculations. Verify fluid properties, reference conditions and project design criteria before final design use.")
 
 
