@@ -596,6 +596,9 @@ def main():
     with st.expander('3E — Pump Curve'):
         from pump_performance.pump_curve_ui import render_pump_curve
         render_pump_curve(FLOW)
+    with st.expander('3F — System Curve'):
+        from pump_performance.system_curve_ui import render_system_curve
+        render_system_curve(FLOW)
     st.caption("Preliminary engineering calculations. Verify fluid properties, reference conditions and project design criteria before final design use.")
 
 
