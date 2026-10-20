@@ -602,6 +602,9 @@ def main():
     with st.expander('3G — Pump/System Operating Point'):
         from pump_performance.operating_point_ui import render_operating_point
         render_operating_point(FLOW)
+    with st.expander('3H — BEP / Operating Range'):
+        from pump_performance.bep_operating_range_ui import render_bep_operating_range
+        render_bep_operating_range(FLOW)
     st.caption("Preliminary engineering calculations. Verify fluid properties, reference conditions and project design criteria before final design use.")
 
 
