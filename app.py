@@ -608,6 +608,9 @@ def main():
     with st.expander('3I — Pump Affinity Laws'):
         from pump_performance.affinity_laws_ui import render_affinity_laws
         render_affinity_laws(FLOW)
+    with st.expander('3J — NPSHR / NPSH Margin'):
+        from pump_performance.npsh_margin_ui import render_npsh_margin
+        render_npsh_margin(PRESSURE)
     st.caption("Preliminary engineering calculations. Verify fluid properties, reference conditions and project design criteria before final design use.")
 
 
