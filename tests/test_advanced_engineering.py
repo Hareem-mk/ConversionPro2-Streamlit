@@ -127,7 +127,7 @@ class AdvancedUI(unittest.TestCase):
         at=AppTest.from_file(str(Path(__file__).resolve().parents[1] / 'app.py')).run()
         self.assertFalse(at.exception)
         self.assertEqual(len(at.tabs),15)
-        self.assertEqual(len(at.expander),14)
+        self.assertEqual(len(at.expander),15)
         for w in at.number_input:
             if w.key.startswith('adv_'):self.assertIsNone(w.value)
         cases={'reynolds':dict(density=1000,velocity=2,diameter=.1,viscosity=.001),
