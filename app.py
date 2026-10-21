@@ -605,6 +605,9 @@ def main():
     with st.expander('3H — BEP / Operating Range'):
         from pump_performance.bep_operating_range_ui import render_bep_operating_range
         render_bep_operating_range(FLOW)
+    with st.expander('3I — Pump Affinity Laws'):
+        from pump_performance.affinity_laws_ui import render_affinity_laws
+        render_affinity_laws(FLOW)
     st.caption("Preliminary engineering calculations. Verify fluid properties, reference conditions and project design criteria before final design use.")
 
 
