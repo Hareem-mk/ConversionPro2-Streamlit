@@ -611,6 +611,9 @@ def main():
     with st.expander('3J — NPSHR / NPSH Margin'):
         from pump_performance.npsh_margin_ui import render_npsh_margin
         render_npsh_margin(PRESSURE)
+    with st.expander('3K — Pump Duty Point / Selection Check'):
+        from pump_performance.duty_point_check_ui import render_duty_point_check
+        render_duty_point_check(FLOW)
     st.caption("Preliminary engineering calculations. Verify fluid properties, reference conditions and project design criteria before final design use.")
 
 
