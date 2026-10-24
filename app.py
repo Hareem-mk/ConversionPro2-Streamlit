@@ -614,6 +614,9 @@ def main():
     with st.expander('3K — Pump Duty Point / Selection Check'):
         from pump_performance.duty_point_check_ui import render_duty_point_check
         render_duty_point_check(FLOW)
+    with st.expander('3L — Pumps in Series / Parallel'):
+        from pump_performance.series_parallel_ui import render_series_parallel
+        render_series_parallel(FLOW)
     st.caption("Preliminary engineering calculations. Verify fluid properties, reference conditions and project design criteria before final design use.")
 
 
