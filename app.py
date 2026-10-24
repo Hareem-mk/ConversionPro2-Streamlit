@@ -617,6 +617,9 @@ def main():
     with st.expander('3L — Pumps in Series / Parallel'):
         from pump_performance.series_parallel_ui import render_series_parallel
         render_series_parallel(FLOW)
+    with st.expander('3M — Pump Efficiency Curve / Operating Efficiency'):
+        from pump_performance.efficiency_curve_ui import render_efficiency_curve
+        render_efficiency_curve(FLOW, DENSITY)
     st.caption("Preliminary engineering calculations. Verify fluid properties, reference conditions and project design criteria before final design use.")
 
 
