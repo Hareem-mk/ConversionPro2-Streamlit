@@ -623,6 +623,9 @@ def main():
     with st.expander('3N — Pump Power Curve / Driver Loading Check'):
         from pump_performance.power_curve_ui import render_power_curve
         render_power_curve(FLOW, DENSITY)
+    with st.expander('3O — NPSHR Curve / Operating NPSHR'):
+        from pump_performance.npshr_curve_ui import render_npshr_curve
+        render_npshr_curve(FLOW, PRESSURE)
     st.caption("Preliminary engineering calculations. Verify fluid properties, reference conditions and project design criteria before final design use.")
 
 
