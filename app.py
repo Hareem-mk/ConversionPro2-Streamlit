@@ -629,6 +629,9 @@ def main():
     with st.expander('3P — Pump Performance Map / Integrated Vendor Curve Check'):
         from pump_performance.performance_map_ui import render_performance_map
         render_performance_map(FLOW)
+    with st.expander('3Q — Pump Curve Characteristics / Shutoff & Slope Analysis'):
+        from pump_performance.curve_characteristics_ui import render_curve_characteristics
+        render_curve_characteristics(FLOW)
     st.caption("Preliminary engineering calculations. Verify fluid properties, reference conditions and project design criteria before final design use.")
 
 
