@@ -626,6 +626,9 @@ def main():
     with st.expander('3O — NPSHR Curve / Operating NPSHR'):
         from pump_performance.npshr_curve_ui import render_npshr_curve
         render_npshr_curve(FLOW, PRESSURE)
+    with st.expander('3P — Pump Performance Map / Integrated Vendor Curve Check'):
+        from pump_performance.performance_map_ui import render_performance_map
+        render_performance_map(FLOW)
     st.caption("Preliminary engineering calculations. Verify fluid properties, reference conditions and project design criteria before final design use.")
 
 
