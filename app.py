@@ -632,6 +632,9 @@ def main():
     with st.expander('3Q — Pump Curve Characteristics / Shutoff & Slope Analysis'):
         from pump_performance.curve_characteristics_ui import render_curve_characteristics
         render_curve_characteristics(FLOW)
+    with st.expander('3R — System Curve Sensitivity / Operating Point Shift Analysis'):
+        from pump_performance.system_sensitivity_ui import render_system_sensitivity
+        render_system_sensitivity(FLOW, DENSITY)
     st.caption("Preliminary engineering calculations. Verify fluid properties, reference conditions and project design criteria before final design use.")
 
 
