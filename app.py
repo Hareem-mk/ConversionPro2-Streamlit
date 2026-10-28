@@ -635,6 +635,9 @@ def main():
     with st.expander('3R — System Curve Sensitivity / Operating Point Shift Analysis'):
         from pump_performance.system_sensitivity_ui import render_system_sensitivity
         render_system_sensitivity(FLOW, DENSITY)
+    with st.expander('3S — Variable-Speed Pump Operating Point / VSD Analysis'):
+        from pump_performance.variable_speed_ui import render_variable_speed
+        render_variable_speed(FLOW)
     st.caption("Preliminary engineering calculations. Verify fluid properties, reference conditions and project design criteria before final design use.")
 
 
