@@ -638,6 +638,9 @@ def main():
     with st.expander('3S — Variable-Speed Pump Operating Point / VSD Analysis'):
         from pump_performance.variable_speed_ui import render_variable_speed
         render_variable_speed(FLOW)
+    with st.expander('3T — Required Pump Speed for Target Flow / VSD Setpoint Solver'):
+        from pump_performance.target_speed_ui import render_target_speed
+        render_target_speed(FLOW)
     st.caption("Preliminary engineering calculations. Verify fluid properties, reference conditions and project design criteria before final design use.")
 
 
