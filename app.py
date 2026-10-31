@@ -647,6 +647,9 @@ def main():
     with st.expander('3V — Pump Annual Energy / Duty-Cycle Operating Cost Analysis'):
         from pump_performance.annual_energy_ui import render_annual_energy
         render_annual_energy(FLOW)
+    with st.expander('3W — Pump Lifecycle Cost / VSD Economic Evaluation'):
+        from pump_performance.lifecycle_cost_ui import render_lifecycle_cost
+        render_lifecycle_cost()
     st.caption("Preliminary engineering calculations. Verify fluid properties, reference conditions and project design criteria before final design use.")
 
 
