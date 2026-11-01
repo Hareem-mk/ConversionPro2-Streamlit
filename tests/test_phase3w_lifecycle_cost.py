@@ -92,7 +92,7 @@ class EconomicAppTests(unittest.TestCase):
     def infos(self,at):return '\n'.join(w.value for w in at.info)
     def test_full_app_registration(self):
         from streamlit.testing.v1 import AppTest
-        at=AppTest.from_file(str(ROOT/'app.py')).run();self.assertFalse(at.exception);self.assertTrue(any(e.label=='3W — Pump Lifecycle Cost / VSD Economic Evaluation' for e in at.expander));self.assertEqual(len(at.expander),28)
+        at=AppTest.from_file(str(ROOT/'app.py')).run();self.assertFalse(at.exception);self.assertTrue(any(e.label=='3W — Pump Lifecycle Cost / VSD Economic Evaluation' for e in at.expander));self.assertEqual(len(at.expander),29)
     def test_blank_required_and_optional_no_checkboxes(self):
         at=self.app();self.assertFalse(at.exception)
         for field in at.number_input:self.assertIsNone(field.value,field.label)
