@@ -650,6 +650,9 @@ def main():
     with st.expander('3W — Pump Lifecycle Cost / VSD Economic Evaluation'):
         from pump_performance.lifecycle_cost_ui import render_lifecycle_cost
         render_lifecycle_cost()
+    with st.expander('3X — Economic Sensitivity / Scenario Analysis'):
+        from pump_performance.economic_sensitivity_ui import render_economic_sensitivity
+        render_economic_sensitivity()
     st.caption("Preliminary engineering calculations. Verify fluid properties, reference conditions and project design criteria before final design use.")
 
 
