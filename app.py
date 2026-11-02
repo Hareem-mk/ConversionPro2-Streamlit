@@ -653,6 +653,9 @@ def main():
     with st.expander('3X — Economic Sensitivity / Scenario Analysis'):
         from pump_performance.economic_sensitivity_ui import render_economic_sensitivity
         render_economic_sensitivity()
+    with st.expander('3Y — Probabilistic Economic Risk / Monte Carlo Analysis'):
+        from pump_performance.monte_carlo_economics_ui import render_monte_carlo_economics
+        render_monte_carlo_economics()
     st.caption("Preliminary engineering calculations. Verify fluid properties, reference conditions and project design criteria before final design use.")
 
 
