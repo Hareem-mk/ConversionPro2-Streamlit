@@ -99,8 +99,8 @@ class SensitivityCoreTests(unittest.TestCase):
         for path,digest in BASELINE_HASHES.items():
             data=(ROOT/path).read_bytes()
             if path=='tests/test_phase3w_lifecycle_cost.py':
-                text=data.decode();self.assertEqual(text.count('len(at.expander),29'),1)
-                data=text.replace('len(at.expander),29','len(at.expander),28',1).encode()
+                text=data.decode();self.assertEqual(text.count('len(at.expander),30'),1)
+                data=text.replace('len(at.expander),30','len(at.expander),28',1).encode()
             self.assertEqual(hashlib.sha256(data).hexdigest(),digest,path)
 
 class SensitivityAppTests(unittest.TestCase):
@@ -118,7 +118,7 @@ class SensitivityAppTests(unittest.TestCase):
     def md(self,at):return '\n'.join(w.value for w in list(at.markdown)+list(at.caption))
     def test_full_app_registration(self):
         from streamlit.testing.v1 import AppTest
-        at=AppTest.from_file(str(ROOT/'app.py')).run();self.assertFalse(at.exception);self.assertEqual(len(at.expander),29);self.assertTrue(any(e.label==ui.TITLE for e in at.expander))
+        at=AppTest.from_file(str(ROOT/'app.py')).run();self.assertFalse(at.exception);self.assertEqual(len(at.expander),30);self.assertTrue(any(e.label==ui.TITLE for e in at.expander))
     def test_blank_inputs_no_range_no_checkboxes(self):
         at=self.app();self.assertFalse(at.exception)
         for w in at.number_input:self.assertIsNone(w.value,w.label)
