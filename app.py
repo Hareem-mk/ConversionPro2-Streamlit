@@ -656,6 +656,15 @@ def main():
     with st.expander('3Y — Probabilistic Economic Risk / Monte Carlo Analysis'):
         from pump_performance.monte_carlo_economics_ui import render_monte_carlo_economics
         render_monte_carlo_economics()
+    with st.expander('3Z — Integrated Pump Technical–Economic Decision Summary', key='p3z_panel', on_change='rerun') as integrated_panel:
+        if integrated_panel.open:
+            from pump_performance.integrated_summary_ui import render_integrated_summary
+            render_integrated_summary(FLOW)
+        else:
+            # Preserve only this new panel's inputs/results while it is closed.
+            for review_key in list(st.session_state):
+                if review_key.startswith('p3z_') and review_key not in ('p3z_panel', 'p3z_build'):
+                    st.session_state[review_key] = st.session_state[review_key]
     st.caption("Preliminary engineering calculations. Verify fluid properties, reference conditions and project design criteria before final design use.")
 
 
