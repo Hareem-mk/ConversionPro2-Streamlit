@@ -117,7 +117,7 @@ class MonteCarloCoreTests(unittest.TestCase):
         for path,digest in BASELINE_HASHES.items():
             data=(ROOT/path).read_bytes()
             if path in ('tests/test_phase3w_lifecycle_cost.py','tests/test_phase3x_economic_sensitivity.py'):
-                data=data.decode().replace('len(at.expander),30','len(at.expander),29').encode()
+                data=data.decode().replace('len(at.expander),31','len(at.expander),29').encode()
             self.assertEqual(hashlib.sha256(data).hexdigest(),digest,path)
 
 class MonteCarloAppTests(unittest.TestCase):
@@ -137,7 +137,7 @@ class MonteCarloAppTests(unittest.TestCase):
         return at
     def test_full_app_registration(self):
         from streamlit.testing.v1 import AppTest
-        at=AppTest.from_file(str(ROOT/'app.py')).run();self.assertFalse(at.exception);self.assertEqual(len(at.expander),30);self.assertTrue(any(e.label==ui.TITLE for e in at.expander))
+        at=AppTest.from_file(str(ROOT/'app.py')).run();self.assertFalse(at.exception);self.assertEqual(len(at.expander),31);self.assertTrue(any(e.label==ui.TITLE for e in at.expander))
     def test_blank_financial_and_distribution_defaults(self):
         at=self.app();self.assertFalse(at.exception)
         for w in at.number_input:self.assertIsNone(w.value,w.label)
