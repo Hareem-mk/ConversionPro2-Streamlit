@@ -455,6 +455,37 @@ These velocity limits are generic screening values, not final design criteria.""
         return f"Error: {e}"
 
 
+# Navigation metadata only; existing renderers keep all calculations and UI.
+PHASE3_MODULES = {
+    '3A — Hydraulic Power': ('hydraulic_power_ui', 'render_hydraulic_power', ('FLOW', 'DENSITY')),
+    '3B — Pump Shaft / Brake Power': ('shaft_power_ui', 'render_shaft_power', ('FLOW', 'DENSITY')),
+    '3C — Motor Input Power': ('motor_power_ui', 'render_motor_power', ('FLOW', 'DENSITY')),
+    '3D — Pump Efficiency': ('pump_efficiency_ui', 'render_pump_efficiency', ('FLOW', 'DENSITY')),
+    '3E — Pump Curve': ('pump_curve_ui', 'render_pump_curve', ('FLOW',)),
+    '3F — System Curve': ('system_curve_ui', 'render_system_curve', ('FLOW',)),
+    '3G — Pump/System Operating Point': ('operating_point_ui', 'render_operating_point', ('FLOW',)),
+    '3H — BEP / Operating Range': ('bep_operating_range_ui', 'render_bep_operating_range', ('FLOW',)),
+    '3I — Pump Affinity Laws': ('affinity_laws_ui', 'render_affinity_laws', ('FLOW',)),
+    '3J — NPSHR / NPSH Margin': ('npsh_margin_ui', 'render_npsh_margin', ('PRESSURE',)),
+    '3K — Pump Duty Point / Selection Check': ('duty_point_check_ui', 'render_duty_point_check', ('FLOW',)),
+    '3L — Pumps in Series / Parallel': ('series_parallel_ui', 'render_series_parallel', ('FLOW',)),
+    '3M — Efficiency Curve / Operating Efficiency': ('efficiency_curve_ui', 'render_efficiency_curve', ('FLOW', 'DENSITY')),
+    '3N — Power Curve / Driver Loading': ('power_curve_ui', 'render_power_curve', ('FLOW', 'DENSITY')),
+    '3O — NPSHR Curve / Operating NPSHR': ('npshr_curve_ui', 'render_npshr_curve', ('FLOW', 'PRESSURE')),
+    '3P — Pump Performance Map / Integrated Vendor Curve Check': ('performance_map_ui', 'render_performance_map', ('FLOW',)),
+    '3Q — Pump Curve Characteristics / Shutoff & Slope': ('curve_characteristics_ui', 'render_curve_characteristics', ('FLOW',)),
+    '3R — System Curve Sensitivity / Operating Point Shift': ('system_sensitivity_ui', 'render_system_sensitivity', ('FLOW', 'DENSITY')),
+    '3S — Variable-Speed Pump Operating Point / VSD': ('variable_speed_ui', 'render_variable_speed', ('FLOW',)),
+    '3T — Required Pump Speed for Target Flow / VSD Setpoint': ('target_speed_ui', 'render_target_speed', ('FLOW',)),
+    '3U — Throttling vs VSD Control Comparison': ('control_strategy_ui', 'render_control_strategy', ('FLOW',)),
+    '3V — Annual Energy / Duty-Cycle Operating Cost': ('annual_energy_ui', 'render_annual_energy', ('FLOW',)),
+    '3W — Lifecycle Cost / VSD Economic Evaluation': ('lifecycle_cost_ui', 'render_lifecycle_cost', ()),
+    '3X — Economic Sensitivity / Scenario Analysis': ('economic_sensitivity_ui', 'render_economic_sensitivity', ()),
+    '3Y — Probabilistic Economic Risk / Monte Carlo Analysis': ('monte_carlo_economics_ui', 'render_monte_carlo_economics', ()),
+    '3Z — Integrated Pump Technical–Economic Decision Summary': ('integrated_summary_ui', 'render_integrated_summary', ('FLOW',)),
+}
+
+
 def main():
     import streamlit as st
     st.set_page_config(page_title="ConversionPro Engineering Calculator", layout="wide")
@@ -465,7 +496,7 @@ def main():
     .conversionpro-header .mku {flex:0 0 auto; margin-left:auto; text-align:right; font-size:0.85rem; font-weight:600; letter-spacing:0.06em; padding-top:0.35rem;}
     </style>
     <div class="conversionpro-header">
-      <h1>ConversionPro Engineering Calculator</h1><span class="mku">MKU</span>
+      <h1>⚙️ ConversionPro Engineering Calculator</h1><span class="mku">MKU</span>
     </div>
     """, unsafe_allow_html=True)
     st.caption("Engineering unit conversions, tank geometry and pipeline velocity")
@@ -580,91 +611,19 @@ def main():
         from piping_hydraulics.npsha_ui import render_npsha
         render_npsha(PRESSURE)
     st.divider()
-    st.header('Phase 3 — Pump Performance')
-    with st.expander('3A — Hydraulic Power'):
-        from pump_performance.hydraulic_power_ui import render_hydraulic_power
-        render_hydraulic_power(FLOW, DENSITY)
-    with st.expander('3B — Pump Shaft / Brake Power'):
-        from pump_performance.shaft_power_ui import render_shaft_power
-        render_shaft_power(FLOW, DENSITY)
-    with st.expander('3C — Motor Input Power'):
-        from pump_performance.motor_power_ui import render_motor_power
-        render_motor_power(FLOW, DENSITY)
-    with st.expander('3D — Pump Efficiency'):
-        from pump_performance.pump_efficiency_ui import render_pump_efficiency
-        render_pump_efficiency(FLOW, DENSITY)
-    with st.expander('3E — Pump Curve'):
-        from pump_performance.pump_curve_ui import render_pump_curve
-        render_pump_curve(FLOW)
-    with st.expander('3F — System Curve'):
-        from pump_performance.system_curve_ui import render_system_curve
-        render_system_curve(FLOW)
-    with st.expander('3G — Pump/System Operating Point'):
-        from pump_performance.operating_point_ui import render_operating_point
-        render_operating_point(FLOW)
-    with st.expander('3H — BEP / Operating Range'):
-        from pump_performance.bep_operating_range_ui import render_bep_operating_range
-        render_bep_operating_range(FLOW)
-    with st.expander('3I — Pump Affinity Laws'):
-        from pump_performance.affinity_laws_ui import render_affinity_laws
-        render_affinity_laws(FLOW)
-    with st.expander('3J — NPSHR / NPSH Margin'):
-        from pump_performance.npsh_margin_ui import render_npsh_margin
-        render_npsh_margin(PRESSURE)
-    with st.expander('3K — Pump Duty Point / Selection Check'):
-        from pump_performance.duty_point_check_ui import render_duty_point_check
-        render_duty_point_check(FLOW)
-    with st.expander('3L — Pumps in Series / Parallel'):
-        from pump_performance.series_parallel_ui import render_series_parallel
-        render_series_parallel(FLOW)
-    with st.expander('3M — Pump Efficiency Curve / Operating Efficiency'):
-        from pump_performance.efficiency_curve_ui import render_efficiency_curve
-        render_efficiency_curve(FLOW, DENSITY)
-    with st.expander('3N — Pump Power Curve / Driver Loading Check'):
-        from pump_performance.power_curve_ui import render_power_curve
-        render_power_curve(FLOW, DENSITY)
-    with st.expander('3O — NPSHR Curve / Operating NPSHR'):
-        from pump_performance.npshr_curve_ui import render_npshr_curve
-        render_npshr_curve(FLOW, PRESSURE)
-    with st.expander('3P — Pump Performance Map / Integrated Vendor Curve Check'):
-        from pump_performance.performance_map_ui import render_performance_map
-        render_performance_map(FLOW)
-    with st.expander('3Q — Pump Curve Characteristics / Shutoff & Slope Analysis'):
-        from pump_performance.curve_characteristics_ui import render_curve_characteristics
-        render_curve_characteristics(FLOW)
-    with st.expander('3R — System Curve Sensitivity / Operating Point Shift Analysis'):
-        from pump_performance.system_sensitivity_ui import render_system_sensitivity
-        render_system_sensitivity(FLOW, DENSITY)
-    with st.expander('3S — Variable-Speed Pump Operating Point / VSD Analysis'):
-        from pump_performance.variable_speed_ui import render_variable_speed
-        render_variable_speed(FLOW)
-    with st.expander('3T — Required Pump Speed for Target Flow / VSD Setpoint Solver'):
-        from pump_performance.target_speed_ui import render_target_speed
-        render_target_speed(FLOW)
-    with st.expander('3U — Throttling vs VSD Control Comparison / Energy Impact Analysis'):
-        from pump_performance.control_strategy_ui import render_control_strategy
-        render_control_strategy(FLOW)
-    with st.expander('3V — Pump Annual Energy / Duty-Cycle Operating Cost Analysis'):
-        from pump_performance.annual_energy_ui import render_annual_energy
-        render_annual_energy(FLOW)
-    with st.expander('3W — Pump Lifecycle Cost / VSD Economic Evaluation'):
-        from pump_performance.lifecycle_cost_ui import render_lifecycle_cost
-        render_lifecycle_cost()
-    with st.expander('3X — Economic Sensitivity / Scenario Analysis'):
-        from pump_performance.economic_sensitivity_ui import render_economic_sensitivity
-        render_economic_sensitivity()
-    with st.expander('3Y — Probabilistic Economic Risk / Monte Carlo Analysis'):
-        from pump_performance.monte_carlo_economics_ui import render_monte_carlo_economics
-        render_monte_carlo_economics()
-    with st.expander('3Z — Integrated Pump Technical–Economic Decision Summary', key='p3z_panel', on_change='rerun') as integrated_panel:
-        if integrated_panel.open:
-            from pump_performance.integrated_summary_ui import render_integrated_summary
-            render_integrated_summary(FLOW)
-        else:
-            # Preserve only this new panel's inputs/results while it is closed.
-            for review_key in list(st.session_state):
-                if review_key.startswith('p3z_') and review_key not in ('p3z_panel', 'p3z_build'):
-                    st.session_state[review_key] = st.session_state[review_key]
+    st.header('🌀 Phase 3 — Pump Performance')
+    selected_module = st.selectbox('Select Pump Performance Module', PHASE3_MODULES,
+                                   key='phase3_module')
+    from importlib import import_module
+    module_name, renderer_name, argument_names = PHASE3_MODULES[selected_module]
+    renderer = getattr(import_module('pump_performance.' + module_name), renderer_name)
+    units = {'FLOW': FLOW, 'DENSITY': DENSITY, 'PRESSURE': PRESSURE}
+    renderer(*(units[name] for name in argument_names))
+    if selected_module != '3Z — Integrated Pump Technical–Economic Decision Summary':
+        # Preserve the existing 3Z input/result retention when its UI is hidden.
+        for review_key in list(st.session_state):
+            if review_key.startswith('p3z_') and review_key not in ('p3z_panel', 'p3z_build'):
+                st.session_state[review_key] = st.session_state[review_key]
     st.caption("Preliminary engineering calculations. Verify fluid properties, reference conditions and project design criteria before final design use.")
 
 
