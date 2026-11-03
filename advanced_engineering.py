@@ -170,9 +170,10 @@ def total_loss(length, diameter, velocity, density, darcy, k_total):
     return major, minor, total
 
 
-def render():
+def render(selected_module=None):
     import streamlit as st
-    st.subheader('Advanced Engineering — Phase 1')
+    if selected_module is None:
+        st.subheader('Advanced Engineering — Phase 1')
     st.write('Steady, single-phase, incompressible Newtonian flow in a full circular pipe; '
              'friction-factor correlations assume fully developed flow. SI units throughout. '
              'Density and viscosity must correspond to the operating conditions.')
@@ -198,7 +199,9 @@ def render():
         st.text(f'Head loss: {loss.head_m:.10g} m\nPressure loss: {loss.pressure_pa:.10g} Pa | '
                 f'{loss.pressure_kpa:.10g} kPa | {loss.pressure_bar:.10g} bar')
     for key, title, names, equation in panels:
-        with st.expander(title, expanded=key == 'reynolds'):
+        if selected_module is not None and title != selected_module:
+            continue
+        with st.expander(title, expanded=selected_module is not None or key == 'reynolds'):
             st.latex(equation)
             if key == 'friction':
                 st.latex(r'\frac{1}{\sqrt{f}}=-2\log_{10}\left(\frac{\varepsilon}{3.7D}+\frac{2.51}{Re\sqrt{f}}\right)')

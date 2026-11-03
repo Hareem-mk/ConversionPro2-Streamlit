@@ -456,6 +456,19 @@ These velocity limits are generic screening values, not final design criteria.""
 
 
 # Navigation metadata only; existing renderers keep all calculations and UI.
+PHASE1_MODULES = ('Reynolds Number', 'Darcy Friction Factor', 'Darcy–Weisbach Pressure Drop', 'Minor Losses', 'Total Pressure Drop')
+
+PHASE2_MODULES = {
+    'Stage 2A — Pipe Sizing': ('ui', 'render_pipe_sizing', ('FLOW',)),
+    'Stage 2B — Pipe Capacity / Flow': ('capacity_ui', 'render_pipe_capacity', ('FLOW',)),
+    'Stage 2C — Pipe Roughness Database': ('roughness_ui', 'render_roughness', ()),
+    'Stage 2D — Fittings / K-Factor Losses': ('fittings_ui', 'render_fittings', ()),
+    'Stage 2E — Equivalent Length': ('equivalent_length', 'render_equivalent_length', ()),
+    'Stage 2F — Integrated Piping Hydraulics': ('integrated_ui', 'render_integrated', ('FLOW',)),
+    'Stage 2G — Total Pump Head': ('pump_head_ui', 'render_pump_head', ('PRESSURE',)),
+    'Stage 2H — NPSHA': ('npsha_ui', 'render_npsha', ('PRESSURE',)),
+}
+
 PHASE3_MODULES = {
     '3A — Hydraulic Power': ('hydraulic_power_ui', 'render_hydraulic_power', ('FLOW', 'DENSITY')),
     '3B — Pump Shaft / Brake Power': ('shaft_power_ui', 'render_shaft_power', ('FLOW', 'DENSITY')),
@@ -526,7 +539,7 @@ def main():
 
     labels = ["Temperature", "Pressure", "Volume", "Mass", "Energy", "Power",
               "Flow Rate", "Mass Flow", "Density", "SG / API / ppm", "Viscosity",
-              "Tank Calculator", "Pipeline Calculator", "Advanced Engineering", "Piping & Pump System Hydraulics"]
+              "Tank Calculator", "Pipeline Calculator"]
     tabs = st.tabs(labels)
     tables = [(TEMP, TEMP[0], TEMP[1]), (PRESSURE, "Pascal (Pa)", "Bar"),
               (VOLUME, "Liter (L)", "Gallon (US)"), (MASS, "Kilogram (kg)", "Pound (lb)"),
@@ -590,26 +603,21 @@ def main():
                        "Heavy Fuel Oil", "LPG (liquid)", "Chemicals", "Slurry"], "pipe_fluid")
         if st.button("Calculate", key="pipe_calculate"):
             result(pipeline(D, Du, Q, Qu, fluid))
-    with tabs[13]:
-        from advanced_engineering import render
-        render()
-    with tabs[14]:
-        from piping_hydraulics.ui import render_pipe_sizing
-        render_pipe_sizing(FLOW)
-        from piping_hydraulics.capacity_ui import render_pipe_capacity
-        render_pipe_capacity(FLOW)
-        from piping_hydraulics.roughness_ui import render_roughness
-        render_roughness()
-        from piping_hydraulics.fittings_ui import render_fittings
-        render_fittings()
-        from piping_hydraulics.equivalent_length import render_equivalent_length
-        render_equivalent_length()
-        from piping_hydraulics.integrated_ui import render_integrated
-        render_integrated(FLOW)
-        from piping_hydraulics.pump_head_ui import render_pump_head
-        render_pump_head(PRESSURE)
-        from piping_hydraulics.npsha_ui import render_npsha
-        render_npsha(PRESSURE)
+    st.divider()
+    st.header('📐 Phase 1 — Advanced Engineering')
+    selected_phase1 = st.selectbox('Select Advanced Engineering Module', PHASE1_MODULES,
+                                  key='phase1_module')
+    from advanced_engineering import render
+    render(selected_phase1)
+    st.divider()
+    st.header('🛠️ Phase 2 — Piping & Pump System Hydraulics')
+    selected_phase2 = st.selectbox('Select Piping & Pump Hydraulics Module', PHASE2_MODULES,
+                                  key='phase2_module')
+    from importlib import import_module
+    module_name, renderer_name, argument_names = PHASE2_MODULES[selected_phase2]
+    renderer = getattr(import_module('piping_hydraulics.' + module_name), renderer_name)
+    units = {'FLOW': FLOW, 'PRESSURE': PRESSURE}
+    renderer(*(units[name] for name in argument_names))
     st.divider()
     st.header('🌀 Phase 3 — Pump Performance')
     selected_module = st.selectbox('Select Pump Performance Module', PHASE3_MODULES,
